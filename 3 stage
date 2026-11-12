@@ -1,0 +1,41 @@
+// Номера пинов, куда воткнуты провода от светодиодов.
+// Если воткнули провода в другие места на плате, поменять цифры здесь:
+int redPin = 13;     // Красный свет
+int yellowPin = 12;  // Желтый свет
+int greenPin = 11;   // Зеленый свет
+
+// 2. Время работы каждого цвета в миллисекундах (1000 мс = 1 секунда).
+int redTime = 3000;     // Сколько горит красный (3 секунды)
+int yellowTime = 1000;  // Сколько горит желтый (1 секунда)
+int greenTime = 3000;   // Сколько горит зеленый (3 секунды)
+
+// === ОСНОВНАЯ ПРОГРАММА (ЗДЕСЬ ЛУЧШЕ НИЧЕГО НЕ ТРОГАТЬ) ===
+
+void setup() {
+  // Говорим плате, что эти пины будут отдавать энергию светодиодам
+  pinMode(redPin, OUTPUT);
+  pinMode(yellowPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+}
+
+void loop() {
+  // 1. Горит КРАСНЫЙ
+  digitalWrite(redPin, HIGH);    // HIGH = Включить
+  delay(redTime);                // Ждем указанное время
+  digitalWrite(redPin, LOW);     // LOW = Выключить
+
+  // 2. Горит ЖЕЛТЫЙ
+  digitalWrite(yellowPin, HIGH);
+  delay(yellowTime);
+  digitalWrite(yellowPin, LOW);
+
+  // 3. Горит ЗЕЛЕНЫЙ
+  digitalWrite(greenPin, HIGH);
+  delay(greenTime);
+  digitalWrite(greenPin, LOW);
+  
+  // 4. Желтый перед красным (как в настоящем светофоре)
+  digitalWrite(yellowPin, HIGH);
+  delay(yellowTime);
+  digitalWrite(yellowPin, LOW);
+}
