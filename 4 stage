@@ -1,0 +1,78 @@
+// Пины светофора для МАШИН:
+int carRed = 13;
+int carYellow = 12;
+int carGreen = 11;
+
+// Пины светофора для ПЕШЕХОДОВ:
+int pedRed = 10;
+int pedGreen = 9;
+
+// Пин, куда подключена КНОПКА:
+int buttonPin = 2;
+
+// Настройки времени (в миллисекундах, 1000 = 1 секунда):
+int waitBeforeChange = 2000; // Задержка после нажатия кнопки (2 сек)
+int yellowTime = 1500;       // Сколько горит желтый свет (1.5 сек)
+int walkTime = 5000;         // Сколько времени дается пешеходу на переход (5 сек)
+
+// СНОВНАЯ ПРОГРАММА
+
+void setup() {
+  // Настраиваем все светодиоды на выход (отдают ток)
+  pinMode(carRed, OUTPUT);
+  pinMode(carYellow, OUTPUT);
+  pinMode(carGreen, OUTPUT);
+  pinMode(pedRed, OUTPUT);
+  pinMode(pedGreen, OUTPUT);
+
+  // Настраиваем кнопку (INPUT_PULLUP избавляет от необходимости ставить лишний резистор)
+  pinMode(buttonPin, INPUT_PULLUP);
+
+  // Исходное состояние при включении: машинам можно ехать, пешеходы стоят
+  digitalWrite(carGreen, HIGH);
+  digitalWrite(pedRed, HIGH);
+}
+
+void loop() {
+  // Проверяем, нажал ли кто-то кнопку (при INPUT_PULLUP нажатие — это LOW)
+  int buttonState = digitalRead(buttonPin);
+
+  if (buttonState == LOW) {
+    // 1. Ждем немного после нажатия кнопки, чтобы машины успели среагировать
+    delay(waitBeforeChange);
+
+    // 2. Выключаем зеленый для машин и включаем желтый
+    digitalWrite(carGreen, LOW);
+    digitalWrite(carYellow, HIGH);
+    delay(yellowTime);
+
+    // 3. Выключаем желтый, включаем КРАСНЫЙ для машин
+    digitalWrite(carYellow, LOW);
+    digitalWrite(carRed, HIGH);
+    delay(500); // Небольшая пауза для безопасности
+
+    // 4. Включаем ЗЕЛЕНЫЙ для пешеходов (выключая им красный)
+    digitalWrite(pedRed, LOW);
+    digitalWrite(pedGreen, HIGH);
+    delay(walkTime); // Пешеходы идут
+
+    // 5. Пешеходный зеленый мигает 3 раза, предупреждая, что время вышло
+    for (int i = 0; i < 3; i++) {
+      digitalWrite(pedGreen, LOW);
+      delay(300);
+      digitalWrite(pedGreen, HIGH);
+      delay(300);
+    }
+
+    // 6. Возвращаем всё обратно: пешеходам красный, машинам через желтый — зеленый
+    digitalWrite(pedGreen, LOW);
+    digitalWrite(pedRed, HIGH);
+    delay(500);
+
+    digitalWrite(carYellow, HIGH);
+    delay(yellowTime);
+    digitalWrite(carRed, LOW);
+    digitalWrite(carYellow, LOW);
+    digitalWrite(carGreen, HIGH);
+  }
+}
